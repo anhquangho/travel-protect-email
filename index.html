@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Travel Protect · 2A review</title>
+    <style>
+      * {
+        box-sizing:border-box
+      }
+      body {
+        margin:0;
+        background:#e8eef1;
+        color:#17313e;
+        font:15px/1.5 Arial,sans-serif
+      }
+      header {
+        background:#fff;
+        padding:24px 32px;
+        border-bottom:1px solid #cbd8df
+      }
+
+      h1 {
+        margin:0 0 8px;
+        font-size:25px
+      }
+      p {
+        margin:8px 0
+      }
+      nav {
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-top:16px
+      }
+      button,a {
+        font:inherit
+      }
+      button {
+        border:1px solid #b4c8d2;
+        background:white;
+        border-radius:5px;
+        padding:8px 14px;
+        color:#023047;
+        cursor:pointer
+      }
+      button[aria-pressed=true] {
+        background:#023047;
+        color:white
+      }
+      a {
+        color:#17708f
+      }
+      .stage {
+        padding:24px;
+        overflow:auto
+      }
+      .pair {
+        display:flex;
+        gap:24px;
+        justify-content:center;
+        align-items:flex-start;
+        min-width:max-content
+      }
+
+
+      iframe {
+        display:block;
+        width:600px;
+        height:2100px;
+        border:0;
+        background:#fff
+      }
+      .ref {
+        display:none;
+        width:600px;
+        height:auto
+      }
+      body.compare .ref {
+        display:block
+      }
+      .label {
+        font-size:12px;
+        letter-spacing:1px;
+        text-transform:uppercase;
+        font-weight:bold;
+        margin:0 0 10px
+      }
+      .note {
+        max-width:1100px;
+        color:#527080;
+        font-size:13px
+      } 
+      @media(max-width:650px) {
+        header {
+          padding:20px
+        }
+        .stage {
+          padding:16px
+        }
+        .pair {
+          justify-content:flex-start
+        }
+      }
+      :focus-visible {
+        outline:3px solid #17708f;
+        outline-offset:3px
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Travel Protect / 2A</h1>
+      <p>Email preview · Sample data · Draft for review</p> 
+      <p
+        class="note"
+      >The full email includes the details and disclaimer from the current email. Use the design comparison to check it against 2A. Document and policy links still need their final URLs. Inbox testing is pending.</p>
+      <nav aria-label="Choose a version">
+        <button id="full" aria-pressed="true">Full email</button>
+        <button id="proof" aria-pressed="false">Compare with 2A</button>
+      </nav>
+      <nav aria-label="Preview width">
+        <button data-width="600" aria-pressed="true">Desktop · 600</button>
+        <button data-width="390" aria-pressed="false">Mobile · 390</button>
+        <button data-width="320" aria-pressed="false">Mobile · 320</button>
+        <a href="email.html" target="_blank" rel="noopener">Open email ↗</a>
+      </nav> 
+    </header>
+    <main class="stage">
+      <div class="pair">
+        <section>
+          <p class="label" id="version">HTML · Full email</p>
+          <iframe id="email" scrolling="no" src="email.html" title="HTML email preview">
+          </iframe>
+        </section>
+        <section class="ref">
+          <p class="label">PDF · Original 2A design</p>
+          <img 
+            src="assets/reference-2a.png"
+            alt="Original 2A design from the supplied PDF"
+            style="
+              display:block;
+              width:600px;
+              height:auto;
+            "
+          >
+        </section>
+      </div>
+    </main>
+    <script>
+      const emailFrame = document.getElementById('email');
+      const versionLabel = document.getElementById('version');
+      const widthButtons = document.querySelectorAll('[data-width]');
+      const versionButtons = ['full', 'proof'].map(id => document.getElementById(id));
+
+      function resizeEmailFrame() {
+        try { 
+          emailFrame.style.height = '1px';
+          emailFrame.style.height = emailFrame.contentDocument.documentElement.scrollHeight + 'px';
+        } catch (error) {
+        }
+      }
+
+      emailFrame.addEventListener('load', resizeEmailFrame);
+
+      widthButtons.forEach(button => {
+        button.addEventListener('click', () => { 
+          widthButtons.forEach(item => {
+            item.setAttribute('aria-pressed', String(item === button));
+          });
+          emailFrame.style.width = button.dataset.width + 'px';
+          setTimeout(resizeEmailFrame, 50);
+        });
+      });
+
+      versionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const showComparison = button.id === 'proof'; 
+
+          versionButtons.forEach(item => {
+            item.setAttribute('aria-pressed', String(item === button));
+          });
+          document.body.classList.toggle('compare', showComparison);
+          emailFrame.src = showComparison? 'design-proof.html' : 'email.html';
+          versionLabel.textContent = showComparison
+            ? 'HTML · 2A design comparison'
+            : 'HTML · Full email';
+        });
+      });
+    </script>
+  </body>
+</html>
